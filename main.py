@@ -58,8 +58,10 @@ HTML = """
 </head>
 <body>
 <p>This is Tumblr reblog tree visualize application.</p>
+<p>Created by <a href="https://twitter.com/yuribossa" target="_brank">@yuribossa</a></p>
 <img src="/img/showmorenotes.jpg" />
-<p>Required "Show more notes" part in tumblr post page.</p>
+<p>Required "Show more notes" part in tumblr post page</p>
+<p>e.g. <a href="http://yuribossa.tumblr.com/post/16117205791" target="_brank">http://yuribossa.tumblr.com/post/16117205791</a></p>
 <form onsubmit="return false;">
 <input type="text" id="inputUrl" />
 <input type="submit" id="submit" value="Get reblog tree" />

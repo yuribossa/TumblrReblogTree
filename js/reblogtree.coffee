@@ -97,8 +97,6 @@ htmlToList = (data) ->
         if /<li class=" note reblog.+>.+?<\/li>/.test(info)
             matchObj = info.match /^<li.+?<a href="(http:\/\/.+?)".+?title="(.+?)".+?img src="(http:\/\/.+?)".*?><\/a>.+?<a.+?>(.+?)<\/a>.+?reblogged.+?<a href="(http:\/\/.+?)".+?title="(.+?)".*?>(.+?)<\/a>.+?<\/li>\s*$/
             if matchObj
-                if not matchObj[4]
-                    console.log matchObj
                 obj =
                     toUrl: matchObj[1]
                     toTitle: matchObj[2]
@@ -108,20 +106,31 @@ htmlToList = (data) ->
                     fromTitle: matchObj[6]
                     fromUser: matchObj[7]
             else
-                ###
-                オリジナルポストかチェック
-                ###
-                matchObj = info.match /^<li.+?<a href="(http:\/\/.+?)".+?title="(.+?)".+?img src="(http:\/\/.+?)".*?><\/a>.+?<a href="(http:\/\/.+?)".+?title="(.+?)".*?>(.+?)<\/a>.+?posted this.+?<\/li>\s*$/
+                matchObj = info.match /^<li.+?<a href="(http:\/\/.+?)".+?title="(.+?)".+?img src="(http:\/\/.+?)".*?><\/a>.+?<a.+?>(.+?)<\/a>.+?<a href="(http:\/\/.+?)".+?title="(.+?)".*?>(.+?)<\/a>.+?リブログ.+?<\/li>\s*$/
                 if matchObj
                     obj =
-                        postUrl: matchObj[1]
-                        postTitle: matchObj[2]
-                        postAvatar: matchObj[3]
-                        postUser: matchObj[6]
                         toUrl: matchObj[1]
                         toTitle: matchObj[2]
                         toAvatar: matchObj[3]
-                        toUser: matchObj[6]
+                        toUser: matchObj[4]
+                        fromUrl: matchObj[5]
+                        fromTitle: matchObj[6]
+                        fromUser: matchObj[7]
+                else
+                    ###
+                    オリジナルポストかチェック
+                    ###
+                    matchObj = info.match /^<li.+?<a href="(http:\/\/.+?)".+?title="(.+?)".+?img src="(http:\/\/.+?)".*?><\/a>.+?<a href="(http:\/\/.+?)".+?title="(.+?)".*?>(.+?)<\/a>.+?[(posted)(投稿)].+?<\/li>\s*$/
+                    if matchObj
+                        obj =
+                            postUrl: matchObj[1]
+                            postTitle: matchObj[2]
+                            postAvatar: matchObj[3]
+                            postUser: matchObj[6]
+                            toUrl: matchObj[1]
+                            toTitle: matchObj[2]
+                            toAvatar: matchObj[3]
+                            toUser: matchObj[6]
             notesInfo.push obj
         else
             likesInfo.push info
