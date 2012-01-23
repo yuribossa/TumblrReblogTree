@@ -12,7 +12,7 @@ printTree = (tree) ->
     print = (tr, html) ->
         html += "<ul>"
         html += "<li>" + tr.node.toUser
-        for node in tr.leaf
+        for node in tr.childNodes
             html = print node, html
         html += "</li>"
         html += "</ul>"
@@ -61,19 +61,19 @@ listToTree = (list) ->
     makeTree = (tree, node, level1, level2) ->
         #console.log "makeTree: " + tree.node.toUser + " " + node.toUser + " " + node.fromUser + " " + level1 + " " + level2
         if tree.node.toUser is node.fromUser and level1 + 1 == level2
-            tree.leaf.push {node: node, leaf: []}
+            tree.childNodes.push {node: node, childNodes: []}
             return true
         else
-            if tree.leaf.length
-                for i in [0...tree.leaf.length]
-                    res = makeTree tree.leaf[i], node, level1+1, level2
+            if tree.childNodes.length
+                for i in [0...tree.childNodes.length]
+                    res = makeTree tree.childNodes[i], node, level1+1, level2
                     if res
                         return true
         return false
 
     tree =
         node: levelList[0][0]
-        leaf: []
+        childNodes: []
     for i in [1...levelList.length]
         for j in [0...levelList[i].length]
             makeTree tree, levelList[i][j], 0, i
