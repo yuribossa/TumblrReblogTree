@@ -18,7 +18,7 @@
       var node, _i, _len, _ref;
       html += "<ul>";
       html += "<li>" + tr.node.toUser;
-      _ref = tr.leaf;
+      _ref = tr.childNodes;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         node = _ref[_i];
         html = print(node, html);
@@ -79,15 +79,15 @@
     makeTree = function(tree, node, level1, level2) {
       var i, res, _ref5;
       if (tree.node.toUser === node.fromUser && level1 + 1 === level2) {
-        tree.leaf.push({
+        tree.childNodes.push({
           node: node,
-          leaf: []
+          childNodes: []
         });
         return true;
       } else {
-        if (tree.leaf.length) {
-          for (i = 0, _ref5 = tree.leaf.length; 0 <= _ref5 ? i < _ref5 : i > _ref5; 0 <= _ref5 ? i++ : i--) {
-            res = makeTree(tree.leaf[i], node, level1 + 1, level2);
+        if (tree.childNodes.length) {
+          for (i = 0, _ref5 = tree.childNodes.length; 0 <= _ref5 ? i < _ref5 : i > _ref5; 0 <= _ref5 ? i++ : i--) {
+            res = makeTree(tree.childNodes[i], node, level1 + 1, level2);
             if (res) return true;
           }
         }
@@ -96,7 +96,7 @@
     };
     tree = {
       node: levelList[0][0],
-      leaf: []
+      childNodes: []
     };
     for (i = 1, _ref5 = levelList.length; 1 <= _ref5 ? i < _ref5 : i > _ref5; 1 <= _ref5 ? i++ : i--) {
       for (j = 0, _ref6 = levelList[i].length; 0 <= _ref6 ? j < _ref6 : j > _ref6; 0 <= _ref6 ? j++ : j--) {
