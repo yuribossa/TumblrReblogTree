@@ -39,6 +39,7 @@ listToTree = (list) ->
     ###
     node = root
     levelList = [[root]]
+    reReblogList = []
     for i in [0...reblogList.length]
         flg = false
         for j in [levelList.length-1..0]
@@ -54,6 +55,23 @@ listToTree = (list) ->
                 break
         if not flg
             console.log "Not found reblog connection: " + reblogList[i].toUser + " reblogged from " + reblogList[i].fromUser
+            reReblogList.push reblogList[i]
+
+    for i in [0...reReblogList.length]
+        flg = false
+        for j in [levelList.length-1..0]
+            for k in [0...levelList[j].length]
+                if reReblogList[i].fromUser is levelList[j][k].toUser
+                    if j == levelList.length - 1
+                        levelList.push [reReblogList[i]]
+                    else
+                        levelList[j+1].push reReblogList[i]
+                    flg = true
+                    break
+            if flg
+                break
+        if not flg
+            console.log "Re not found reblog connection: " + reReblogList[i].toUser + " reblogged from " + reReblogList[i].fromUser
 
     ###
     木構造にノード追加

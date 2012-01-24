@@ -38,7 +38,7 @@
     /*
         ルートノード取得
     */
-    var flg, i, j, k, levelList, makeTree, node, reblogList, root, tree, _ref, _ref2, _ref3, _ref4, _ref5, _ref6;
+    var flg, i, j, k, levelList, makeTree, node, reReblogList, reblogList, root, tree, _ref, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
     root = {};
     reblogList = [];
     for (i = 0, _ref = list.length; 0 <= _ref ? i < _ref : i > _ref; 0 <= _ref ? i++ : i--) {
@@ -53,6 +53,7 @@
     */
     node = root;
     levelList = [[root]];
+    reReblogList = [];
     for (i = 0, _ref2 = reblogList.length; 0 <= _ref2 ? i < _ref2 : i > _ref2; 0 <= _ref2 ? i++ : i--) {
       flg = false;
       for (j = _ref3 = levelList.length - 1; _ref3 <= 0 ? j <= 0 : j >= 0; _ref3 <= 0 ? j++ : j--) {
@@ -71,13 +72,34 @@
       }
       if (!flg) {
         console.log("Not found reblog connection: " + reblogList[i].toUser + " reblogged from " + reblogList[i].fromUser);
+        reReblogList.push(reblogList[i]);
+      }
+    }
+    for (i = 0, _ref5 = reReblogList.length; 0 <= _ref5 ? i < _ref5 : i > _ref5; 0 <= _ref5 ? i++ : i--) {
+      flg = false;
+      for (j = _ref6 = levelList.length - 1; _ref6 <= 0 ? j <= 0 : j >= 0; _ref6 <= 0 ? j++ : j--) {
+        for (k = 0, _ref7 = levelList[j].length; 0 <= _ref7 ? k < _ref7 : k > _ref7; 0 <= _ref7 ? k++ : k--) {
+          if (reReblogList[i].fromUser === levelList[j][k].toUser) {
+            if (j === levelList.length - 1) {
+              levelList.push([reReblogList[i]]);
+            } else {
+              levelList[j + 1].push(reReblogList[i]);
+            }
+            flg = true;
+            break;
+          }
+        }
+        if (flg) break;
+      }
+      if (!flg) {
+        console.log("Re not found reblog connection: " + reReblogList[i].toUser + " reblogged from " + reReblogList[i].fromUser);
       }
     }
     /*
         木構造にノード追加
     */
     makeTree = function(tree, node, level1, level2) {
-      var i, res, _ref5;
+      var i, res, _ref8;
       if (tree.node.toUser === node.fromUser && level1 + 1 === level2) {
         tree.childNodes.push({
           node: node,
@@ -86,7 +108,7 @@
         return true;
       } else {
         if (tree.childNodes.length) {
-          for (i = 0, _ref5 = tree.childNodes.length; 0 <= _ref5 ? i < _ref5 : i > _ref5; 0 <= _ref5 ? i++ : i--) {
+          for (i = 0, _ref8 = tree.childNodes.length; 0 <= _ref8 ? i < _ref8 : i > _ref8; 0 <= _ref8 ? i++ : i--) {
             res = makeTree(tree.childNodes[i], node, level1 + 1, level2);
             if (res) return true;
           }
@@ -98,8 +120,8 @@
       node: levelList[0][0],
       childNodes: []
     };
-    for (i = 1, _ref5 = levelList.length; 1 <= _ref5 ? i < _ref5 : i > _ref5; 1 <= _ref5 ? i++ : i--) {
-      for (j = 0, _ref6 = levelList[i].length; 0 <= _ref6 ? j < _ref6 : j > _ref6; 0 <= _ref6 ? j++ : j--) {
+    for (i = 1, _ref8 = levelList.length; 1 <= _ref8 ? i < _ref8 : i > _ref8; 1 <= _ref8 ? i++ : i--) {
+      for (j = 0, _ref9 = levelList[i].length; 0 <= _ref9 ? j < _ref9 : j > _ref9; 0 <= _ref9 ? j++ : j--) {
         makeTree(tree, levelList[i][j], 0, i);
       }
     }
